@@ -66,24 +66,16 @@ jobs:
       - name: Package
         if: startsWith(github.ref, 'refs/tags/')
         run: |
-          mkdir libsimple-osx-x64
+          mkdir libsimple-darwin-${{ matrix.arch}}
           sudo xattr -r -d com.apple.quarantine src/libsimple.dylib
-          cp -r src/libsimple.dylib test/dict libsimple-osx-x64/
-          zip -r libsimple-osx-x64.zip libsimple-osx-x64
+          cp -r src/libsimple.dylib test/dict libsimple-darwin-${{ matrix.arch}}/
+          zip -r libsimple-darwin-${{ matrix.arch}}.zip libsimple-darwin-${{ matrix.arch}}
         working-directory: "${{ github.workspace }}/build"
-      - name: Release
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v1
-        with:
-          draft: true
-          files: ${{ github.workspace }}/build/libsimple-osx-x64.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
+
       - name: upload artifacts macos
         uses: actions/upload-artifact@v3
         with:
-          name: libsimple-${{ matrix.arch }}
+          name: libsimple-darwin-${{ matrix.arch }}
           path: ${{ github.workspace }}/build/src/libsimple.dylib
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
