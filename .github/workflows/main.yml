@@ -11,11 +11,9 @@ jobs:
   MacOS:
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: true
       matrix:
-        include:
-        - os: macos-11  ### X86 CPU
-        - os: macos-latest ##M1 CPU
+        os: [macos-latest]
+        arch: [arm64, x64]
     steps:
       - name: "Release Build Type"
         if: startsWith(github.ref, 'refs/tags/')
@@ -85,7 +83,7 @@ jobs:
       - name: upload artifacts macos
         uses: actions/upload-artifact@v3
         with:
-          name: libsimple-${{ matrix.os }}
+          name: libsimple-${{ matrix.arch }}
           path: ${{ github.workspace }}/build/src/libsimple.dylib
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
